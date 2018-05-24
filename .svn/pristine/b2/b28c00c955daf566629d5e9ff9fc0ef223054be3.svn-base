@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<!--  方法结果缓存通知  -->
+
+	<bean id="someServiceTarget" class="aop5.SomeServiceImpl"></bean>
+	
+	<bean id="methodCacheAdvice" class="aop5.MethodCacheAdvice"></bean>
+	
+	<bean id="someService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="someServiceTarget"></property>
+		<property name="proxyInterfaces" value="aop5.ISomeService"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>methodCacheAdvice</value>
+			</list>
+		</property>
+	</bean>
+
+
+
+	<bean id="otherServiceTarget" class="aop5.OtherServiceImpl"></bean>
+	
+	<bean id="otherService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="otherServiceTarget"></property>
+		<property name="proxyInterfaces" value="aop5.IOtherService"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>methodCacheAdvice</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

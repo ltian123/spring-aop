@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+<!--  Spring AOP 2.x  -->
+
+	<bean id="someService" class="aop10.SomeServiceImpl"></bean>
+	<bean id="otherService" class="aop10.OtherServiceImpl"></bean>
+	
+	<bean id="logAdvice" class="aop10.LogAdvice"></bean>
+	<bean id="welcomeAdvice" class="aop10.WelcomeAdvice"></bean>
+	<bean id="serviceExceptionAdvice" class="aop10.ServiceExceptionAdvice"></bean>
+	<bean id="timeAdvice" class="aop10.TimeAdvice"></bean>
+	<bean id="log" class="aop10.Log"></bean>
+
+	<aop:config>
+		<aop:pointcut id="pc1" expression="within(aop10.SomeServiceImpl)"/>
+		<aop:pointcut id="pc2" expression="within(aop10.OtherServiceImpl)"/>
+		
+<!--		<aop:aspect ref="logAdvice" order="7">-->
+<!--			<aop:before pointcut-ref="pc1" method="log"/>-->
+<!--			<aop:after pointcut-ref="pc2" method="log"/>-->
+<!--		</aop:aspect>-->
+<!--		-->
+<!--		<aop:aspect ref="welcomeAdvice" order="3">-->
+<!--			<aop:after-returning pointcut-ref="pc2" method="welcome"/>-->
+<!--		</aop:aspect>-->
+<!--		-->
+<!--		<aop:aspect ref="serviceExceptionAdvice" order="2">-->
+<!--			<aop:after-throwing pointcut-ref="pc2" method="exception"/>-->
+<!--		</aop:aspect>-->
+<!--		-->
+<!--		<aop:aspect ref="timeAdvice" order="1">-->
+<!--			<aop:around pointcut-ref="pc2" method="time"/>-->
+<!--		</aop:aspect>-->
+
+		<aop:aspect ref="log">
+			<aop:before pointcut-ref="pc2" method="before"/>
+			<aop:after-returning pointcut-ref="pc2" method="afterReturning" returning="r"/>
+			<aop:after-throwing pointcut-ref="pc2" method="afterThrowing" throwing="e"/>
+		</aop:aspect>
+		
+	</aop:config>
+
+
+</beans>
+

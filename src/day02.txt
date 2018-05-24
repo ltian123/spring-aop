@@ -1,0 +1,139 @@
+Resource
+	封装了java.io.File
+	实现类
+		根据文件位置不同
+
+Bean中获得当前Bean所在的容器
+	ApplicationContextAware
+	BeanFactoryAware
+
+FactoryBean
+	创建对象过程比较复杂，过程不需要关心，只需要最后的对象
+
+后处理Bean
+	实现BeanPostProcessor接口
+	后处理Bean会对当前容器中的所有Bean做后处理
+	常用于
+		修改Bean	替换代理对象	annotation
+
+
+Bean生命周期
+	实例化
+	->DI
+	->BeanNameAware的setBeanName方法
+	->BeanFactoryAware的setBeanFactory方法
+	->ApplicationContextAware的setApplicationContext方法
+	->postProcessBeforeInitialization
+	->初始化方法
+	->postProcessAfterInitialization
+	->就绪
+	-->使用
+	-->销毁方法
+	->从容器中销毁
+
+
+属性编辑
+	编写转换规则
+		继承PropertyEditorSupport类
+		重写setAsText/getAsText方法
+		setValue方法设置转换的对象/getValue方法获得转换的对象
+	
+	什么时候转换
+		配置一个后处理Bean（BeanFactoryPostProcessor）
+			org.springframework.beans.factory.config.CustomEditorConfigurer
+		注入customEditors
+
+	spring提供的属性编辑器
+		org.springframework.beans.propertyeditors包下
+
+访问Properties文件
+	配置后处理Bean
+		org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
+	注入location/locations表示文件的位置，Resource类型
+	使用${key}读取Properties文件中的值
+
+
+AOP容器
+	Aspect Oriented Programming
+	面向切面编程
+
+	将应用中的交叉业务逻辑（事务，日志，安全，缓存等）提取出来封装成切面
+	由AOP容器在适当的时机（编译或运行）
+	将这些切面动态织入到具体的业务逻辑中
+	
+
+	将交叉业务逻辑抽象成切面
+	目的
+		把交叉业务逻辑代码和具体业务逻辑代码分离
+		切面复用
+		独立模块化
+		在不改变现有代码基础上，动态添加新的功能
+
+	名词
+		切面	Aspect
+
+		连接点	Joinpoint
+
+		通知	Advice
+
+		切入点	Pointcut
+
+		引入	Introduction
+
+		目标	Target
+
+		代理	Proxy
+
+		织入	Weaing
+
+
+	AOP原理
+		采用动态代理模式
+			动态代理：依据目标类，代理接口，交叉业务逻辑代码
+				  自动生成代理类和代理对象
+
+			代理对象
+			Object java.lang.reflect.Proxy.newProxyInstance(
+					ClassLoader loader,	//目标类的类加载器
+					Class<?>[] interfaces,	//代理接口
+					InvocationHandler h	//交叉业务逻辑代码
+				) 
+
+	
+	Spring AOP采用动态代理过程
+		Spring在默认情况下（Bean类实现了代理接口）
+		Spring使用用动态代理模式实现AOP
+		Bean类没有实现代理接口
+		Spring所以用CGLib生成代理对象
+		该对象是目标对象的子类型
+		因此Bean类不能是final类
+		目标类如果是final类，并且没有实现任何代理接口，不能使用AOP
+
+
+	Spring AOP 1.x
+		1.通知Advice
+			通知类型		接口
+			Around环绕		MethodInterceptor
+			Before前置		MethodBeforeAdvice
+			After后置		AfterReturningAdvice
+			Throws异常		ThrowsAdvice
+
+			AfterAdvice=AfterReturningAdvice+ThrowsAdvice
+
+		2.ProxyFactoryBean
+
+
+		方法结果缓存通知
+			C
+				int f(int i)
+
+
+			C c=ac.getBean("c");
+
+			c.f(5);   7	执行方法
+			c.f(5);	  7	从缓存中获得
+			c.f(5);   7	从缓存中获得
+
+
+	Spring AOP 2.x
+

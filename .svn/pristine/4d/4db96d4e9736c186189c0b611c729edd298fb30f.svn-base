@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<!--  Advisor  -->
+
+	<bean id="someServiceTarget" class="aop6.SomeServiceImpl"></bean>
+	<bean id="otherServiceTarget" class="aop6.OtherServiceImpl"></bean>
+	
+	<bean id="logAdvice" class="aop6.LogAdvice"></bean>
+	
+	<bean id="myPointcut" class="aop6.MyPointcut"></bean>
+	
+	<bean id="logAdvisor" class="aop6.LogAdvisor">
+		<property name="advice" ref="logAdvice"></property>
+		<property name="pointcut" ref="myPointcut"></property>
+	</bean>
+	
+	<bean id="someService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="someServiceTarget"></property>
+		<property name="proxyInterfaces" value="aop6.ISomeService"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>logAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="otherService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="otherServiceTarget"></property>
+		<property name="proxyInterfaces" value="aop6.IOtherService"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>logAdvisor</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

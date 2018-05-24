@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<!--  自动代理  -->
+
+	<bean id="someService" class="aop8.SomeServiceImpl"></bean>
+	<bean id="otherService" class="aop8.OtherServiceImpl"></bean>
+	
+	<bean id="logAdvice" class="aop8.LogAdvice"></bean>
+	
+	<bean id="logAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice" ref="logAdvice"></property>
+		<property name="mappedNames">
+			<list>
+				<value>doOther</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+<!--				<value>someService</value>-->
+<!--				<value>otherService</value>-->
+				<value>*Service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>logAdvisor</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

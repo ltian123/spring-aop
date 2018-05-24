@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<!--  引入  -->
+
+	<bean id="someServiceTarget" class="aop9.SomeServiceImpl"></bean>
+	
+	<bean id="myIntroductionAdvice" class="aop9.MyIntroductionAdvice"></bean>
+	
+	<bean id="myIntroductionAdvisor" class="org.springframework.aop.support.DefaultIntroductionAdvisor">
+		<constructor-arg>
+			<ref bean="myIntroductionAdvice"/>
+		</constructor-arg>
+		<constructor-arg>
+			<value>aop9.IOtherService</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="someService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="someServiceTarget"></property>
+		<property name="proxyInterfaces" value="aop9.ISomeService"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>myIntroductionAdvisor</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>
